@@ -3,6 +3,7 @@
 import { Auth } from '@/components/Auth';
 import { Trophy } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { Suspense } from 'react';
 
 export default function AuthPage() {
   return (
@@ -23,7 +24,9 @@ export default function AuthPage() {
             Sign in to vote for your favorite anime
           </p>
         </motion.div>
-        <Auth />
+        <Suspense fallback={<div>Loading...</div>}>
+          <Auth />
+        </Suspense>
       </div>
     </div>
   );

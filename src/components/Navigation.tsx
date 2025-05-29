@@ -1,15 +1,10 @@
 'use client';
 
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useRouter, usePathname } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { User } from '@supabase/supabase-js';
-
-interface UserProfile {
-  id: string;
-  username: string;
-}
 
 interface ExtendedUser extends User {
   username: string;
@@ -17,7 +12,6 @@ interface ExtendedUser extends User {
 
 export function Navigation() {
   const router = useRouter();
-  const pathname = usePathname();
   const [user, setUser] = useState<ExtendedUser | null>(null);
   const [loading, setLoading] = useState(true);
   const [signingOut, setSigningOut] = useState(false);

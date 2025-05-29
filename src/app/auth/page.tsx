@@ -8,7 +8,7 @@ import Link from 'next/link';
 
 export default function AuthPage() {
   return (
-    <div className="min-h-100 flex items-center justify-center py-20 sm:py-8 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-100 flex items-center justify-center py-10 sm:py-2 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-2 sm:space-y-1">
         <motion.div 
           initial={{ opacity: 0, y: -20 }}

@@ -371,9 +371,9 @@ const VotingApp: React.FC = () => {
   console.log('Rendering with voteCounts state:', voteCounts);
 
   return (
-    <div className={`min-h-screen w-full text-gray-300`}> 
+    <div className={`w-full text-gray-300`}> 
       
-      <div className="w-full px-4 py-2 pt-16 pb-20 overflow-y-auto" >
+      <div className="w-full px-4 py-2 pt-16 pb-20 overflow-y-auto min-h-screen" >
         <div className="mb-4 text-center">
           <Image
             src="/logo.png"
@@ -553,7 +553,7 @@ const VotingApp: React.FC = () => {
               </svg>
             </button>
             <h2 className="text-xl sm:text-2xl font-bold mb-4 text-[#FFD700]">Sign In Required</h2>
-            <p className="text-sm sm:text-base text-gray-300 mb-6">You need to be signed in to cast your vote.</p>
+            <p className="text-sm sm:text-base text-gray-300 mb-6">You need to be signed in to vote.</p>
             <Link href="/auth">
               <button
                 onClick={() => setSignInModalOpen(false)}

@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { motion } from 'framer-motion';
+import { LogIn, UserPlus, Loader2 } from 'lucide-react';
 
 export function Auth() {
   const router = useRouter();
@@ -117,8 +118,16 @@ export function Auth() {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="max-w-md mx-auto bg-[#242424] rounded-lg p-8 border border-[#333333]"
+      className="bg-[#242424] rounded-xl p-6 sm:p-8 border border-[#333333] shadow-xl"
     >
+      <div className="flex items-center justify-center mb-6">
+        {isSignUp ? (
+          <UserPlus className="w-8 h-8 text-[#FFD700]" />
+        ) : (
+          <LogIn className="w-8 h-8 text-[#FFD700]" />
+        )}
+      </div>
+
       <h2 className="text-2xl font-bold mb-6 text-center text-[#FFD700]">
         {isSignUp ? 'Create Account' : 'Sign In'}
       </h2>
@@ -134,7 +143,8 @@ export function Auth() {
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              className="w-full px-4 py-2 rounded-md bg-[#1a1a1a] border border-[#333333] focus:border-[#FFD700] focus:ring-1 focus:ring-[#FFD700] text-white"
+              className="w-full px-4 py-2 rounded-md bg-[#1a1a1a] border border-[#333333] focus:border-[#FFD700] focus:ring-1 focus:ring-[#FFD700] text-white placeholder-gray-500"
+              placeholder="Enter your username"
               required
             />
           </div>
@@ -149,7 +159,8 @@ export function Auth() {
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full px-4 py-2 rounded-md bg-[#1a1a1a] border border-[#333333] focus:border-[#FFD700] focus:ring-1 focus:ring-[#FFD700] text-white"
+            className="w-full px-4 py-2 rounded-md bg-[#1a1a1a] border border-[#333333] focus:border-[#FFD700] focus:ring-1 focus:ring-[#FFD700] text-white placeholder-gray-500"
+            placeholder="Enter your email"
             required
           />
         </div>
@@ -163,7 +174,8 @@ export function Auth() {
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full px-4 py-2 rounded-md bg-[#1a1a1a] border border-[#333333] focus:border-[#FFD700] focus:ring-1 focus:ring-[#FFD700] text-white"
+            className="w-full px-4 py-2 rounded-md bg-[#1a1a1a] border border-[#333333] focus:border-[#FFD700] focus:ring-1 focus:ring-[#FFD700] text-white placeholder-gray-500"
+            placeholder="Enter your password"
             required
           />
         </div>
@@ -192,19 +204,33 @@ export function Auth() {
           type="submit"
           disabled={loading}
           className={`
-            w-full py-2 px-4 rounded-md font-medium transition-colors
+            w-full py-2 px-4 rounded-md font-medium transition-colors flex items-center justify-center gap-2
             ${loading
               ? 'bg-[#333333] text-gray-400 cursor-wait'
               : 'bg-[#FFD700] hover:bg-[#FFE44D] text-[#1a1a1a]'
             }
           `}
         >
-          {loading
-            ? 'Please wait...'
-            : isSignUp
-            ? 'Sign Up'
-            : 'Sign In'
-          }
+          {loading ? (
+            <>
+              <Loader2 className="w-4 h-4 animate-spin" />
+              Please wait...
+            </>
+          ) : (
+            <>
+              {isSignUp ? (
+                <>
+                  <UserPlus className="w-4 h-4" />
+                  Sign Up
+                </>
+              ) : (
+                <>
+                  <LogIn className="w-4 h-4" />
+                  Sign In
+                </>
+              )}
+            </>
+          )}
         </button>
 
         <p className="text-center text-sm text-gray-400">
@@ -212,7 +238,7 @@ export function Auth() {
           <button
             type="button"
             onClick={() => setIsSignUp(!isSignUp)}
-            className="text-[#FFD700] hover:text-[#FFE44D]"
+            className="text-[#FFD700] hover:text-[#FFE44D] font-medium"
           >
             {isSignUp ? 'Sign In' : 'Sign Up'}
           </button>

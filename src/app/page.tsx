@@ -210,11 +210,15 @@ const VotingApp: React.FC = () => {
           .from('votes')
           .select('*', { count: 'exact', head: true });
 
-        // Get user's vote count
-        const { count: userVoteCount } = await supabase
-          .from('votes')
-          .select('*', { count: 'exact', head: true })
-          .eq('user_id', user?.id);
+        // Get user's vote count only if user is logged in
+        let userVoteCount = 0;
+        if (user) {
+          const { count } = await supabase
+            .from('votes')
+            .select('*', { count: 'exact', head: true })
+            .eq('user_id', user.id);
+          userVoteCount = count || 0;
+        }
 
         // Get vote counts per nominee
         const { data: voteCounts } = await supabase
@@ -231,7 +235,7 @@ const VotingApp: React.FC = () => {
 
         setStats({
           totalCategories: categoryCount || 0,
-          userVotes: userVoteCount || 0,
+          userVotes: userVoteCount,
           totalNominees: nomineeCount || 0,
           totalVotes: voteCount || 0
         });
@@ -240,10 +244,26 @@ const VotingApp: React.FC = () => {
       }
     };
 
-    if (user) {
-      fetchStats();
-    }
-  }, [user]);
+    // Fetch stats immediately and set up real-time subscription
+    fetchStats();
+
+    // Set up real-time subscription for votes
+    const votesSubscription = supabase
+      .channel('votes_changes')
+      .on('postgres_changes', { 
+        event: '*', 
+        schema: 'public', 
+        table: 'votes' 
+      }, () => {
+        // Refetch stats when votes change
+        fetchStats();
+      })
+      .subscribe();
+
+    return () => {
+      votesSubscription.unsubscribe();
+    };
+  }, [user]); // Only re-run if user changes
 
   // Initialize database with categories and nominees
   useEffect(() => {
@@ -349,6 +369,20 @@ const VotingApp: React.FC = () => {
         throw checkError;
       }
 
+      // If there's an existing vote, decrement the old nominee's vote count
+      if (existingVote) {
+        const { error: decrementError } = await supabase
+          .from('vote_counts')
+          .update({ vote_count: supabase.rpc('decrement_vote_count') })
+          .eq('category_id', categoryId)
+          .eq('nominee_id', existingVote.nominee_id);
+
+        if (decrementError) {
+          console.error('Error decrementing old vote count:', decrementError);
+          throw decrementError;
+        }
+      }
+
       // Save or update vote to Supabase
       const { error: upsertError } = await supabase
         .from('votes')
@@ -364,6 +398,23 @@ const VotingApp: React.FC = () => {
       if (upsertError) {
         console.error('Error saving vote:', upsertError);
         throw upsertError;
+      }
+
+      // Update vote count for the new nominee
+      const { error: incrementError } = await supabase
+        .from('vote_counts')
+        .upsert({
+          category_id: categoryId,
+          nominee_id: nomineeId,
+          vote_count: 1
+        }, {
+          onConflict: 'category_id,nominee_id',
+          count: 'exact'
+        });
+
+      if (incrementError) {
+        console.error('Error incrementing vote count:', incrementError);
+        throw incrementError;
       }
 
       // Update local state

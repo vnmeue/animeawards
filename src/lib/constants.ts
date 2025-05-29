@@ -40,7 +40,6 @@ export const IMAGE_URLS = {
 export const ROUTES = {
   HOME: '/',
   CATEGORIES: '/categories',
-  RESULTS: '/results',
   AUTH: '/auth',
   PROFILE: '/profile',
 } as const;

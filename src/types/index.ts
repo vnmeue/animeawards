@@ -9,7 +9,7 @@ export interface Category {
   created_at: string;
   updated_at: string;
   is_new?: boolean;
-  icon: LucideIcon;
+  iconName: string;
 }
 
 export interface Nominee {
@@ -18,6 +18,12 @@ export interface Nominee {
   image: string;
   description?: string;
   category_id: number;
+}
+
+export interface VoteCountNomineeData {
+  id: number;
+  title: string;
+  image: string;
 }
 
 export interface CategoryNominee {
@@ -35,9 +41,10 @@ export interface Vote {
 }
 
 export interface VoteCount {
-  nominee_id: number;
   category_id: number;
+  nominee_id: number;
   vote_count: number;
+  nominees: VoteCountNomineeData[];
 }
 
 export interface UserProfile {

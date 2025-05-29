@@ -99,22 +99,6 @@ export function Navigation() {
             <Link href="/" className="text-[#FFD700] font-bold hover:text-[#FFE44D]">
               Subhasha ANIME AWARDS 2025
             </Link>
-            <Link 
-              href="/categories" 
-              className={`text-gray-300 hover:text-[#FFD700] ${
-                pathname === '/categories' ? 'text-[#FFD700]' : ''
-              }`}
-            >
-              Categories
-            </Link>
-            <Link 
-              href="/results" 
-              className={`text-gray-300 hover:text-[#FFD700] ${
-                pathname === '/results' ? 'text-[#FFD700]' : ''
-              }`}
-            >
-              Results
-            </Link>
           </div>
 
           <div className="flex items-center space-x-4">

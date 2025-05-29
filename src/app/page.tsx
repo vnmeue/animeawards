@@ -146,7 +146,6 @@ const CATEGORIES: Category[] = [
 ];
 
 const VotingApp: React.FC = () => {
-  const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
   const [votes, setVotes] = useState<Votes>({});
   const [isVoting, setIsVoting] = useState(false);
   const [voteCounts, setVoteCounts] = useState<VoteCounts>({});
@@ -262,63 +261,7 @@ const VotingApp: React.FC = () => {
     return () => {
       votesSubscription.unsubscribe();
     };
-  }, [user]); // Only re-run if user changes
-
-  // Initialize database with categories and nominees
-  useEffect(() => {
-    const initializeDatabase = async () => {
-      try {
-        // First check if categories exist
-        const { count: categoryCount } = await supabase
-          .from('categories')
-          .select('*', { count: 'exact', head: true });
-
-        // If no categories exist, create them
-        if (categoryCount === 0) {
-          console.log('Initializing categories...');
-          const { error: categoryError } = await supabase
-            .from('categories')
-            .insert(CATEGORIES.map(cat => ({
-              id: cat.id,
-              name: cat.name,
-              slug: cat.slug,
-              is_new: cat.isNew
-            })));
-
-          if (categoryError) {
-            console.error('Error creating categories:', categoryError);
-            return;
-          }
-
-          // Create nominees
-          console.log('Initializing nominees...');
-          const nomineeEntries = CATEGORIES.flatMap(category =>
-            category.nominees.map(nominee => ({
-              id: nominee.id,
-              category_id: category.id,
-              title: nominee.title,
-              image: nominee.image
-            }))
-          );
-
-          const { error: nomineeError } = await supabase
-            .from('nominees')
-            .insert(nomineeEntries);
-
-          if (nomineeError) {
-            console.error('Error creating nominees:', nomineeError);
-            return;
-          }
-
-          console.log('Database initialized successfully');
-        }
-      } catch (error) {
-        console.error('Error initializing database:', error);
-      }
-    };
-
-    initializeDatabase();
-  }, []);
+  }, [user]);
 
   const handleVote = async (categoryId: number, nomineeId: number) => {
     if (!user) {
@@ -443,75 +386,6 @@ const VotingApp: React.FC = () => {
     }
   };
 
-  const handleSubmitVotes = async () => {
-    if (!user) {
-      alert('Please sign in to submit votes');
-      return;
-    }
-    
-    setIsSubmitting(true);
-    try {
-      // Get existing votes for this user
-      const { data: existingVotes, error: fetchError } = await supabase
-        .from('votes')
-        .select('category_id, nominee_id')
-        .eq('user_id', user.id);
-
-      if (fetchError) {
-        console.error('Error fetching existing votes:', fetchError);
-        throw fetchError;
-      }
-
-      // Create a map of existing votes
-      const existingVoteMap = new Map(
-        existingVotes?.map(vote => [vote.category_id, vote.nominee_id]) || []
-      );
-
-      // Prepare vote entries, only including new or changed votes
-      const voteEntries = Object.entries(votes)
-        .filter(([categoryId, nomineeId]) => {
-          const existingNomineeId = existingVoteMap.get(parseInt(categoryId));
-          return !existingNomineeId || existingNomineeId !== nomineeId;
-        })
-        .map(([categoryId, nomineeId]) => ({
-          user_id: user.id,
-          category_id: parseInt(categoryId),
-          nominee_id: nomineeId,
-          created_at: new Date().toISOString()
-        }));
-
-      if (voteEntries.length === 0) {
-        alert('No new votes to submit!');
-        return;
-      }
-
-      // Save votes to Supabase
-      const { error: upsertError } = await supabase
-        .from('votes')
-        .upsert(voteEntries, {
-          onConflict: 'user_id,category_id'
-        });
-
-      if (upsertError) {
-        console.error('Error submitting votes:', upsertError);
-        throw upsertError;
-      }
-
-      // Update total votes count
-      setStats(prev => ({
-        ...prev,
-        totalVotes: prev.totalVotes + voteEntries.length
-      }));
-
-      alert('Votes submitted successfully!');
-    } catch (error) {
-      console.error('Error submitting votes:', error);
-      alert('Error submitting votes. Please try again.');
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
   const totalVotes = Object.values(votes).length;
   const allCategoriesVoted = totalVotes === CATEGORIES.length;
 
@@ -560,35 +434,6 @@ const VotingApp: React.FC = () => {
             </ul>
           </div>
         </div>
-
-        {/* Submit Button - Only show when all categories are voted */}
-        {allCategoriesVoted && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-50"
-          >
-            <button
-              onClick={handleSubmitVotes}
-              disabled={isSubmitting}
-              className={`bg-[#FFD700] text-[#1a1a1a] px-8 py-4 rounded-full font-bold text-lg shadow-lg hover:bg-[#FFE44D] transition-colors duration-300 flex items-center gap-2 ${
-                isSubmitting ? 'opacity-75 cursor-not-allowed' : ''
-              }`}
-            >
-              {isSubmitting ? (
-                <>
-                  <div className="w-5 h-5 border-2 border-[#1a1a1a] border-t-transparent rounded-full animate-spin" />
-                  Submitting...
-                </>
-              ) : (
-                <>
-                  <Trophy className="w-5 h-5" />
-                  Submit All Votes
-                </>
-              )}
-            </button>
-          </motion.div>
-        )}
 
         {/* Categories */}
         <div className="space-y-12">

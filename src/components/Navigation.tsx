@@ -86,7 +86,7 @@ export function Navigation() {
   };
 
   return (
-    <nav className="bg-[#242424] border-b border-[#333333] fixed bottom-0 left-0 w-full z-50 sm:static sm:border-b">
+    <nav className="fixed bottom-4 left-1/2 transform -translate-x-1/2 w-[calc(100%-2rem)] max-w-lg bg-[#2a2a2a] border border-[#3a3a3a] rounded-xl shadow-lg z-50 sm:static sm:top-0 sm:w-full sm:max-w-none sm:bg-[#242424] sm:border-b sm:border-[#333333] sm:rounded-none sm:shadow-none">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center">
           <div className="flex items-center space-x-4">

@@ -17,13 +17,13 @@ export default function VerifyEmailStatusPage() {
           <p className="text-gray-300 text-sm sm:text-base mb-8">
             Your email address has been successfully verified.
           </p>
-          <Link href="/">
+          <Link href="/auth">
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="bg-[#FFD700] hover:bg-[#FFE44D] text-[#1a1a1a] px-6 py-3 rounded-full font-bold text-lg shadow-lg transition-colors duration-300"
             >
-              Go to Home
+              Go to Signin
             </motion.button>
           </Link>
         </motion.div>

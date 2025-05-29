@@ -373,7 +373,7 @@ const VotingApp: React.FC = () => {
   return (
     <div className={`w-full text-gray-300`}> 
       
-      <div className="w-full px-4 py-2 pt-16 pb-20 overflow-y-auto min-h-screen" >
+      <div className="w-full px-4 py-2 pt-8 pb-8 overflow-y-auto min-h-screen" >
         <div className="mb-4 text-center">
           <Image
             src="/logo.png"
@@ -385,7 +385,7 @@ const VotingApp: React.FC = () => {
           <h1 className="text-xl font-bold italic text-gray-300">Subhasha is doing a poll because crunchyroll couldnt do it</h1>
         </div>
         {/* Header Stats - Make it scrollable on mobile */}
-        <div className="overflow-x-auto pb-4 -mx-4 px-4 sm:mx-0 sm:px-0">
+        <div className="overflow-x-auto pb-1 -mx-4 px-4 sm:mx-0 sm:px-0">
  
           <div className="grid grid-cols-2 gap-3 mb-8">
             <div className={`bg-white/5 rounded-xl p-4 border border-white/10 backdrop-blur-sm`}>
@@ -407,7 +407,6 @@ const VotingApp: React.FC = () => {
           </div>
         </div>
 
-        {/* Progress and Instructions - More compact on mobile */}
         <div className="bg-white/5 rounded-xl p-4 border border-white/10 backdrop-blur-sm mb-8">
           <div className="flex items-center justify-between mb-3">
             <h2 className="text-lg font-bold text-[#FFD700]">Voting Progress</h2>

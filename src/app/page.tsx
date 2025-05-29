@@ -354,10 +354,10 @@ const VotingApp: React.FC = () => {
       // Remove manual increment - should be handled by trigger
 
       // Update local state to reflect the vote immediately (optional but good UX)
-      setVotes(prev => ({
-        ...prev,
-        [categoryId]: nomineeId
-      }));
+    setVotes(prev => ({
+      ...prev,
+      [categoryId]: nomineeId
+    }));
 
       console.log('Vote saved successfully');
     } catch (error) {
@@ -383,7 +383,7 @@ const VotingApp: React.FC = () => {
             className="mx-auto mb-2"
           />
           <h1 className="text-xl font-bold italic text-gray-300">Subhasha is doing a poll because crunchyroll couldnt do it</h1>
-        </div>
+    </div>
         {/* Header Stats - Make it scrollable on mobile */}
         <div className="overflow-x-auto pb-1 -mx-4 px-4 sm:mx-0 sm:px-0">
  
@@ -399,12 +399,12 @@ const VotingApp: React.FC = () => {
             <div className={`bg-white/5 rounded-xl p-4 border border-white/10 backdrop-blur-sm`}>
               <h3 className={`text-sm font-semibold text-[#FFD700] mb-1`}>Total Nominees</h3>
               <p className={`text-xl font-bold text-white`}>{stats.totalNominees}</p>
-            </div>
+              </div>
             <div className={`bg-white/5 rounded-xl p-4 border border-white/10 backdrop-blur-sm`}>
               <h3 className={`text-sm font-semibold text-[#FFD700] mb-1`}>Total Votes</h3>
               <p className={`text-xl font-bold text-white`}>{stats.totalVotes.toLocaleString()}</p>
-            </div>
-          </div>
+                  </div>
+                  </div>
         </div>
 
         <div className="bg-white/5 rounded-xl p-4 border border-white/10 backdrop-blur-sm mb-8">
@@ -427,7 +427,7 @@ const VotingApp: React.FC = () => {
               <li>Toggle "Show Results" to see live vote counts</li>
             </ul>
           </div>
-        </div>
+          </div>
 
         {/* Toggle Results Button - More compact on mobile */}
         <div className="flex justify-center mb-6">
@@ -459,7 +459,7 @@ const VotingApp: React.FC = () => {
                   <div className="flex items-center gap-2">
                     <category.icon className="w-5 h-5 text-[#FFD700]" />
                     <h2 className="text-lg font-bold text-[#FFD700]">{category.name}</h2>
-                  </div>
+          </div>
                   {category.isNew && (
                     <span className="bg-[#FFD700] text-[#1a1a1a] px-2 py-0.5 rounded-full text-xs font-bold">
                       NEW!
@@ -512,8 +512,8 @@ const VotingApp: React.FC = () => {
                                     className="bg-[#FFD700] h-0.5 rounded-full transition-all duration-1000"
                                     style={{ width: `${(voteCount / totalCategoryVotes) * 100}%` }}
                                   />
-                                </div>
-                              </div>
+                    </div>
+                      </div>
                             )}
                           </div>
 
@@ -536,8 +536,8 @@ const VotingApp: React.FC = () => {
               </motion.section>
             );
           })}
-        </div>
-      </div>
+  </div>
+  </div>
 
       {/* Sign In Modal */}
       {signInModalOpen && (
@@ -562,9 +562,9 @@ const VotingApp: React.FC = () => {
               </button>
             </Link>
           </div>
-        </div>
+                    </div>
       )}
-    </div>
+</div>
   );
 };
 

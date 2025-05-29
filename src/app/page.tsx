@@ -229,11 +229,13 @@ const VotingApp: React.FC = () => {
           .select('*');
 
         if (voteCountsData) {
+          console.log('Fetched voteCountsData:', voteCountsData);
           const voteCountMap: VoteCounts = {};
           voteCountsData.forEach(vc => {
             voteCountMap[`${vc.category_id}-${vc.nominee_id}`] = vc.vote_count;
           });
           setVoteCounts(voteCountMap);
+          console.log('Populated voteCountMap:', voteCountMap);
         } else if (voteCountsError) {
            console.error('Error fetching vote counts:', voteCountsError);
         }
@@ -358,6 +360,8 @@ const VotingApp: React.FC = () => {
 
   const totalVotes = Object.values(votes).length;
 
+  console.log('Rendering with voteCounts state:', voteCounts);
+
   return (
     <div className={`min-h-screen bg-[${COLORS.BACKGROUND}]`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -416,99 +420,105 @@ const VotingApp: React.FC = () => {
 
         {/* Categories */}
         <div className="space-y-12">
-          {CATEGORIES.map((category) => (
-            <motion.section
-              key={category.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="bg-[#242424] rounded-xl p-6 border border-[#333333]"
-            >
-              <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center gap-3">
-                  <category.icon className="w-6 h-6 text-[#FFD700]" />
-                  <h2 className="text-2xl font-bold text-[#FFD700]">{category.name}</h2>
+          {CATEGORIES.map((category) => {
+            const categoryVoteCounts = voteCounts; // Explicitly use voteCounts state here
+
+            // Calculate totalCategoryVotes once per category
+            const totalCategoryVotes = category.nominees.reduce(
+              (acc, n) => acc + (categoryVoteCounts[`${category.id}-${n.id}`] || 0),
+              0
+            );
+
+            return (
+              <motion.section
+                key={category.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="bg-[#242424] rounded-xl p-6 border border-[#333333]"
+              >
+                <div className="flex items-center justify-between mb-6">
+                  <div className="flex items-center gap-3">
+                    <category.icon className="w-6 h-6 text-[#FFD700]" />
+                    <h2 className="text-2xl font-bold text-[#FFD700]">{category.name}</h2>
+                  </div>
+                  {category.isNew && (
+                    <span className="bg-[#FFD700] text-[#1a1a1a] px-3 py-1 rounded-full text-sm font-bold">
+                      NEW!
+                    </span>
+                  )}
                 </div>
-                {category.isNew && (
-                  <span className="bg-[#FFD700] text-[#1a1a1a] px-3 py-1 rounded-full text-sm font-bold">
-                    NEW!
-                  </span>
-                )}
-              </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {category.nominees.map((nominee) => {
-                  const isSelected = votes[category.id] === nominee.id;
-                  const voteCount = voteCounts[`${category.id}-${nominee.id}`] || 0;
-                  const totalCategoryVotes = category.nominees.reduce(
-                    (acc, n) => acc + (voteCounts[`${category.id}-${n.id}`] || 0),
-                    0
-                  );
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {category.nominees.map((nominee) => {
+                    const isSelected = votes[category.id] === nominee.id;
+                    const voteCount = categoryVoteCounts[`${category.id}-${nominee.id}`] || 0;
 
-                  const percentage = totalCategoryVotes > 0 ? ((voteCount / totalCategoryVotes) * 100).toFixed(1) : '0.0';
+                    const percentage = totalCategoryVotes > 0 ? ((voteCount / totalCategoryVotes) * 100).toFixed(1) : '0.0';
 
-                  console.log(`Category: ${category.name}, Nominee: ${nominee.title}, Vote Count: ${voteCount}, Total Category Votes: ${totalCategoryVotes}, Percentage: ${percentage}%`);
+                    console.log(`Category: ${category.name}, Nominee: ${nominee.title}, Vote Count: ${voteCount}, Total Category Votes: ${totalCategoryVotes}, Percentage: ${percentage}%`);
 
-                  return (
-                    <motion.div
-                      key={nominee.id}
-                      initial={{ opacity: 0, scale: 0.95 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      className={`relative group cursor-pointer transition-all duration-300 ${
-                        isSelected ? 'scale-105 ring-2 ring-[#FFD700]' : 'hover:scale-102'
-                      }`}
-                      onClick={() => handleVote(category.id, nominee.id)}
-                    >
-                      <div className="relative overflow-hidden rounded-xl bg-[#1a1a1a] border border-[#333333]">
-                        <div className="aspect-[3/4] overflow-hidden">
-                          <Image
-                            src={nominee.image}
-                            alt={nominee.title}
-                            width={300}
-                            height={400}
-                            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
-                          />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                        </div>
+                    return (
+                      <motion.div
+                        key={nominee.id}
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        className={`relative group cursor-pointer transition-all duration-300 ${
+                          isSelected ? 'scale-105 ring-2 ring-[#FFD700]' : 'hover:scale-102'
+                        }`}
+                        onClick={() => handleVote(category.id, nominee.id)}
+                      >
+                        <div className="relative overflow-hidden rounded-xl bg-[#1a1a1a] border border-[#333333]">
+                          <div className="aspect-[3/4] overflow-hidden">
+                            <Image
+                              src={nominee.image}
+                              alt={nominee.title}
+                              width={300}
+                              height={400}
+                              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                          </div>
 
-                        <div className="absolute bottom-0 left-0 right-0 p-4">
-                          <h4 className="text-white font-semibold text-sm mb-2 line-clamp-2">
-                            {nominee.title}
-                          </h4>
+                          <div className="absolute bottom-0 left-0 right-0 p-4">
+                            <h4 className="text-white font-semibold text-sm mb-2 line-clamp-2">
+                              {nominee.title}
+                            </h4>
 
-                          {showResults && (
-                            <div className="space-y-2">
-                              <div className="flex justify-between text-xs text-gray-300">
-                                <span>{voteCount} votes</span>
-                                <span>{percentage}%</span>
+                            {showResults && (
+                              <div className="space-y-2">
+                                <div className="flex justify-between text-xs text-gray-300">
+                                  <span>{voteCount} votes</span>
+                                  <span>{percentage}%</span>
+                                </div>
+                                <div className="w-full bg-[#333333] rounded-full h-1.5">
+                                  <div 
+                                    className="bg-[#FFD700] h-1.5 rounded-full transition-all duration-1000"
+                                    style={{ width: `${(voteCount / totalCategoryVotes) * 100}%` }}
+                                  />
+                                </div>
                               </div>
-                              <div className="w-full bg-[#333333] rounded-full h-1.5">
-                                <div 
-                                  className="bg-[#FFD700] h-1.5 rounded-full transition-all duration-1000"
-                                  style={{ width: `${(voteCount / totalCategoryVotes) * 100}%` }}
-                                />
-                              </div>
+                            )}
+                          </div>
+
+                          {isSelected && (
+                            <div className="absolute top-2 right-2 bg-[#FFD700] rounded-full p-1">
+                              <Heart className="w-4 h-4 text-[#1a1a1a] fill-current" />
+                            </div>
+                          )}
+
+                          {!showResults && (
+                            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                              <Vote className="w-8 h-8 text-[#FFD700]" />
                             </div>
                           )}
                         </div>
-
-                        {isSelected && (
-                          <div className="absolute top-2 right-2 bg-[#FFD700] rounded-full p-1">
-                            <Heart className="w-4 h-4 text-[#1a1a1a] fill-current" />
-                          </div>
-                        )}
-
-                        {!showResults && (
-                          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                            <Vote className="w-8 h-8 text-[#FFD700]" />
-                          </div>
-                        )}
-                      </div>
-                    </motion.div>
-                  );
-                })}
-              </div>
-            </motion.section>
-          ))}
+                      </motion.div>
+                    );
+                  })}
+                </div>
+              </motion.section>
+            );
+          })}
         </div>
       </div>
     </div>

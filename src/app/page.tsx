@@ -1,11 +1,10 @@
 "use client"
 import React, { useState, useEffect } from 'react';
-import { Heart, Star, Trophy, Film, Tv, Palette, Users, Music, Award, ChevronRight, Vote, Sparkles } from 'lucide-react';
-import Link from 'next/link';
+import { Heart, Trophy, Film, Tv, Palette, Users, Music, Vote, Sparkles } from 'lucide-react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { supabase } from '@/lib/supabase';
-import { IMAGE_URLS, ROUTES, COLORS } from '@/lib/constants';
+import { IMAGE_URLS, COLORS } from '@/lib/constants';
 
 interface Nominee {
   id: number;

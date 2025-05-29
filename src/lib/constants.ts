@@ -25,7 +25,7 @@ export const IMAGE_URLS = {
   SUICIDE_SQUAD: 'https://upload.wikimedia.org/wikipedia/en/6/69/Suicide_Squad_Isekai_key_visual.jpg',
   SLIME: 'https://m.media-amazon.com/images/M/MV5BOTczMjM3MDUtYmZjMC00YzZhLWE4ODQtNjg5YWU4NTJjNzY2XkEyXkFqcGc@._V1_.jpg',
   KAFKA: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTGnmNvQI-Mta81lEACW-dPB77pP3ZRePFSLw&s',
-  OKARUN: 'https://c4.wallpaperflare.com/wallpaper/438/755/606/dandadan-okarun-anime-hd-wallpaper-preview.jpg',
+  OKARUN: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSnVAbWQz6fNYuR8OqFuI88aWqewG6FYxvvTw&s',
   MAOMAO: 'https://upload.wikimedia.org/wikipedia/en/d/d4/Maomao_%28The_Apothecary_Diaries%29.png',
   MOMO: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXY5yk1zb5J-FyIDRWn7q0Rwooy17kEEml5g&s',
   SUNG_JINWOO: 'https://4kwallpapers.com/images/wallpapers/sung-jinwoo-solo-2732x2732-17972.jpg',

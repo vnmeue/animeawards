@@ -275,12 +275,15 @@ const VotingApp: React.FC = () => {
   }, [user]);
 
   const handleVote = async (categoryId: number, nomineeId: number) => {
+    console.log(`Attempting to vote for Category: ${categoryId}, Nominee: ${nomineeId}`);
     if (!user) {
+      console.log('User not signed in. Alerting user.');
       alert('Please sign in to vote');
       return;
     }
     
     try {
+      console.log('Checking if category exists...');
       // First check if category exists
       const { data: category, error: categoryError } = await supabase
         .from('categories')
@@ -294,6 +297,7 @@ const VotingApp: React.FC = () => {
         return;
       }
 
+      console.log('Checking if nominee exists...');
       // Check if nominee exists
       const { data: nominee, error: nomineeError } = await supabase
         .from('nominees')
@@ -308,6 +312,7 @@ const VotingApp: React.FC = () => {
         return;
       }
 
+      console.log('Checking for existing vote...');
       // First check if user already voted in this category
       const { data: existingVote, error: checkError } = await supabase
         .from('votes')
@@ -323,9 +328,10 @@ const VotingApp: React.FC = () => {
 
       // If there's an existing vote, decrement the old nominee's vote count
       if (existingVote) {
-        // Remove manual decrement - should be handled by trigger
+        console.log(`Existing vote found for category ${categoryId}. Nominee ${existingVote.nominee_id}. Trigger should handle decrement.`);
       }
 
+      console.log('Upserting vote...');
       // Save or update vote to Supabase
       const { error: upsertError } = await supabase
         .from('votes')

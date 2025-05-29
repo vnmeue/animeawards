@@ -370,7 +370,7 @@ const VotingApp: React.FC = () => {
 
   return (
     <div className={`min-h-screen bg-[${COLORS.BACKGROUND}]`}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pb-24">
         {/* Header Stats */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
           <div className={`bg-[${COLORS.CARD_BACKGROUND}] rounded-xl p-6 border border-[${COLORS.BORDER}]`}>
@@ -404,7 +404,7 @@ const VotingApp: React.FC = () => {
             />
           </div>
           <div className="space-y-2 text-gray-300">
-            <h3 className="text-lg font-semibold text-[#FFD700] mb-2">How to Vote</h3>
+            <h3 className="text-lg font-semibold text-[${COLORS.FFD700}] mb-2">How to Vote</h3>
             <ul className="list-disc list-inside space-y-1">
               <li>Click on your favorite nominee in each category</li>
               <li>You can vote in multiple categories</li>

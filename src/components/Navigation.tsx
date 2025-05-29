@@ -86,7 +86,7 @@ export function Navigation() {
   };
 
   return (
-    <nav className="bg-[#242424] border-b border-[#333333]">
+    <nav className="bg-[#242424] border-b border-[#333333] fixed bottom-0 left-0 w-full z-50 sm:static sm:border-b">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center">
           <div className="flex items-center space-x-4">
@@ -100,11 +100,11 @@ export function Navigation() {
               <div className="text-gray-300">Loading...</div>
             ) : user ? (
               <>
-                <span className="text-gray-300">Welcome, {user.username}</span>
+                <span className="text-gray-300 whitespace-nowrap">Welcome, {user.username}</span>
                 <button
                   onClick={handleSignOut}
                   disabled={signingOut}
-                  className={`bg-[#333333] hover:bg-[#444444] text-white px-4 py-2 rounded-md ${
+                  className={`bg-[#333333] hover:bg-[#444444] text-white px-4 py-2 rounded-md whitespace-nowrap ${
                     signingOut ? 'opacity-50 cursor-not-allowed' : ''
                   }`}
                 >
@@ -114,7 +114,7 @@ export function Navigation() {
             ) : (
               <Link
                 href="/auth"
-                className="bg-[#FFD700] hover:bg-[#FFE44D] text-[#1a1a1a] px-4 py-2 rounded-md"
+                className="bg-[#FFD700] hover:bg-[#FFE44D] text-[#1a1a1a] px-4 py-2 rounded-md whitespace-nowrap"
               >
                 Sign In
               </Link>

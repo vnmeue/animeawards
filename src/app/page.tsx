@@ -371,7 +371,7 @@ const VotingApp: React.FC = () => {
   console.log('Rendering with voteCounts state:', voteCounts);
 
   return (
-    <div className={`min-h-screen w-full bg-gradient-to-br from-[#1a1a1a] to-[#333333] text-gray-300`}> 
+    <div className={`min-h-screen w-full text-gray-300`}> 
       
       <div className="w-full px-4 py-2 pt-16 pb-20" >
         <div className="mb-4 text-center">

@@ -429,6 +429,16 @@ const VotingApp: React.FC = () => {
           </div>
         </div>
 
+        {/* Toggle Results Button */}
+        <div className="flex justify-center mb-8">
+          <button
+            onClick={() => setShowResults(!showResults)}
+            className={`bg-[#FFD700] text-[#1a1a1a] px-6 py-3 rounded-full font-bold text-lg shadow-lg hover:bg-[#FFE44D] transition-colors duration-300`}
+          >
+            {showResults ? 'Hide Results' : 'Show Results'}
+          </button>
+        </div>
+
         {/* Categories */}
         <div className="space-y-12">
           {CATEGORIES.map((category) => (

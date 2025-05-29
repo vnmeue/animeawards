@@ -371,10 +371,22 @@ const VotingApp: React.FC = () => {
   console.log('Rendering with voteCounts state:', voteCounts);
 
   return (
-    <div className={`min-h-screen w-full bg-gradient-to-br from-[#1a1a1a] to-[#333333] text-gray-300`}>
-      <div className="w-full h-full min-h-screen px-4 py-6 pt-20 pb-20">
+    <div className={`min-h-screen w-full bg-gradient-to-br from-[#1a1a1a] to-[#333333] text-gray-300`}> 
+      
+      <div className="w-full px-4 py-2 pt-16 pb-20" >
+        <div className="mb-4 text-center">
+          <Image
+            src="/logo.png"
+            alt="Subhasha Anime Awards Logo"
+            width={120}
+            height={120}
+            className="mx-auto mb-2"
+          />
+          <h1 className="text-xl font-bold italic text-gray-300">Subhasha is doing a poll because crunchyroll couldnt do it</h1>
+        </div>
         {/* Header Stats - Make it scrollable on mobile */}
         <div className="overflow-x-auto pb-4 -mx-4 px-4 sm:mx-0 sm:px-0">
+ 
           <div className="grid grid-cols-2 gap-3 mb-8">
             <div className={`bg-white/5 rounded-xl p-4 border border-white/10 backdrop-blur-sm`}>
               <h3 className={`text-sm font-semibold text-[#FFD700] mb-1`}>Categories</h3>

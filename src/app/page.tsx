@@ -147,7 +147,6 @@ const CATEGORIES: Category[] = [
 
 const VotingApp: React.FC = () => {
   const [votes, setVotes] = useState<Votes>({});
-  const [isVoting, setIsVoting] = useState(false);
   const [voteCounts, setVoteCounts] = useState<VoteCounts>({});
   const [showResults, setShowResults] = useState(false);
   const [user, setUser] = useState<User | null>(null);
@@ -157,7 +156,6 @@ const VotingApp: React.FC = () => {
     totalNominees: 0,
     totalVotes: 0
   });
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Get user's votes and stats
   useEffect(() => {
@@ -269,7 +267,6 @@ const VotingApp: React.FC = () => {
       return;
     }
     
-    setIsVoting(true);
     try {
       // First check if category exists
       const { data: category, error: categoryError } = await supabase
@@ -381,13 +378,10 @@ const VotingApp: React.FC = () => {
     } catch (error) {
       console.error('Error saving vote:', error);
       alert('Error saving vote. Please try again.');
-    } finally {
-      setIsVoting(false);
     }
   };
 
   const totalVotes = Object.values(votes).length;
-  const allCategoriesVoted = totalVotes === CATEGORIES.length;
 
   return (
     <div className={`min-h-screen bg-[${COLORS.BACKGROUND}]`}>

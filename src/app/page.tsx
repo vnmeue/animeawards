@@ -201,10 +201,17 @@ const VotingApp: React.FC = () => {
           .from('nominees')
           .select('*', { count: 'exact', head: true });
 
-        // Get total votes
-        const { count: voteCount } = await supabase
-          .from('votes')
-          .select('*', { count: 'exact', head: true });
+        // Get total votes from vote_counts table (sum of vote_count)
+        const { data: totalVotesData, error: totalVotesError } = await supabase
+          .from('vote_counts')
+          .select('vote_count');
+
+        let totalAggregatedVotes = 0;
+        if (totalVotesData) {
+          totalAggregatedVotes = totalVotesData.reduce((sum, row) => sum + row.vote_count, 0);
+        } else if (totalVotesError) {
+          console.error('Error fetching total aggregated votes:', totalVotesError);
+        }
 
         // Get user's vote count only if user is logged in
         let userVoteCount = 0;
@@ -217,26 +224,30 @@ const VotingApp: React.FC = () => {
         }
 
         // Get vote counts per nominee
-        const { data: voteCounts } = await supabase
+        const { data: voteCountsData, error: voteCountsError } = await supabase
           .from('vote_counts')
           .select('*');
 
-        if (voteCounts) {
+        if (voteCountsData) {
           const voteCountMap: VoteCounts = {};
-          voteCounts.forEach(vc => {
+          voteCountsData.forEach(vc => {
             voteCountMap[`${vc.category_id}-${vc.nominee_id}`] = vc.vote_count;
           });
           setVoteCounts(voteCountMap);
+        } else if (voteCountsError) {
+           console.error('Error fetching vote counts:', voteCountsError);
         }
 
-        setStats({
+        setStats(prevStats => ({
+          ...prevStats,
           totalCategories: categoryCount || 0,
           userVotes: userVoteCount,
           totalNominees: nomineeCount || 0,
-          totalVotes: voteCount || 0
-        });
+          totalVotes: totalAggregatedVotes
+        }));
+
       } catch (error) {
-        console.error('Error fetching stats:', error);
+        console.error('Error in fetchStats:', error);
       }
     };
 
@@ -310,16 +321,7 @@ const VotingApp: React.FC = () => {
 
       // If there's an existing vote, decrement the old nominee's vote count
       if (existingVote) {
-        const { error: decrementError } = await supabase
-          .from('vote_counts')
-          .update({ vote_count: supabase.rpc('decrement_vote_count') })
-          .eq('category_id', categoryId)
-          .eq('nominee_id', existingVote.nominee_id);
-
-        if (decrementError) {
-          console.error('Error decrementing old vote count:', decrementError);
-          throw decrementError;
-        }
+        // Remove manual decrement - should be handled by trigger
       }
 
       // Save or update vote to Supabase
@@ -339,39 +341,12 @@ const VotingApp: React.FC = () => {
         throw upsertError;
       }
 
-      // Update vote count for the new nominee
-      const { error: incrementError } = await supabase
-        .from('vote_counts')
-        .upsert({
-          category_id: categoryId,
-          nominee_id: nomineeId,
-          vote_count: 1
-        }, {
-          onConflict: 'category_id,nominee_id',
-          count: 'exact'
-        });
+      // Remove manual increment - should be handled by trigger
 
-      if (incrementError) {
-        console.error('Error incrementing vote count:', incrementError);
-        throw incrementError;
-      }
-
-      // Update local state
+      // Update local state to reflect the vote immediately (optional but good UX)
       setVotes(prev => ({
         ...prev,
         [categoryId]: nomineeId
-      }));
-
-      // Update vote counts
-      setVoteCounts(prev => ({
-        ...prev,
-        [`${categoryId}-${nomineeId}`]: (prev[`${categoryId}-${nomineeId}`] || 0) + 1
-      }));
-
-      // Update user's vote count
-      setStats(prev => ({
-        ...prev,
-        userVotes: prev.userVotes + (existingVote ? 0 : 1)
       }));
 
       console.log('Vote saved successfully');
@@ -469,6 +444,10 @@ const VotingApp: React.FC = () => {
                     0
                   );
 
+                  const percentage = totalCategoryVotes > 0 ? ((voteCount / totalCategoryVotes) * 100).toFixed(1) : '0.0';
+
+                  console.log(`Category: ${category.name}, Nominee: ${nominee.title}, Vote Count: ${voteCount}, Total Category Votes: ${totalCategoryVotes}, Percentage: ${percentage}%`);
+
                   return (
                     <motion.div
                       key={nominee.id}
@@ -500,7 +479,7 @@ const VotingApp: React.FC = () => {
                             <div className="space-y-2">
                               <div className="flex justify-between text-xs text-gray-300">
                                 <span>{voteCount} votes</span>
-                                <span>{((voteCount / totalCategoryVotes) * 100).toFixed(1)}%</span>
+                                <span>{percentage}%</span>
                               </div>
                               <div className="w-full bg-[#333333] rounded-full h-1.5">
                                 <div 

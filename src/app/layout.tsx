@@ -20,7 +20,7 @@ export default function RootLayout({
       <body className={`${inter.className} bg-[#1a1a1a] text-white min-h-screen`}>
         <Navigation />
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          {children}
+        {children}
         </main>
         <footer className="bg-[#242424] mt-auto">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">

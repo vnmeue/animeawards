@@ -542,7 +542,7 @@ const VotingApp: React.FC = () => {
       {/* Sign In Modal */}
       {signInModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-[101]">
-          <div className="bg-[#1a1a1a] text-white p-6 sm:p-8 rounded-lg shadow-xl border border-[#3a3a3a] max-w-sm w-full text-center relative">
+          <div className="bg-[#1a1a1a] text-white p-6 sm:p-4 rounded-lg shadow-xl border border-[#3a3a3a] max-w-xs w-full text-center relative">
             <button 
               onClick={() => setSignInModalOpen(false)}
               className="absolute top-3 right-3 text-gray-500 hover:text-gray-300"

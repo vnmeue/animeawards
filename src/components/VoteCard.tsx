@@ -89,7 +89,9 @@ export function VoteCard({ nominee, categoryId, voteCount }: VoteCardProps) {
 
         {!hasVoted && !showSubmit && (
           <div 
-            className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center cursor-pointer"
+            className="absolute inset-0 bg-black/60 opacity-0 
+            group-hover:opacity-100 transition-opacity duration-300 flex items-center 
+            justify-center cursor-pointer"
             onClick={handleVote}
           >
             <Vote className="w-8 h-8 text-[#FFD700]" />
@@ -101,14 +103,16 @@ export function VoteCard({ nominee, categoryId, voteCount }: VoteCardProps) {
             <button
               onClick={handleSubmit}
               disabled={isVoting}
-              className="bg-[#FFD700] hover:bg-[#FFE44D] text-[#1a1a1a] px-4 py-2 rounded-md font-semibold transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="bg-[#FFD700] hover:bg-[#FFE44D] text-[#1a1a1a] px-4 py-2 
+              rounded-md font-semibold transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isVoting ? 'Submitting...' : 'Submit Vote'}
             </button>
             <button
               onClick={handleCancel}
               disabled={isVoting}
-              className="bg-[#333333] hover:bg-[#444444] text-white px-4 py-2 rounded-md font-semibold transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="bg-[#333333] hover:bg-[#444444] text-white px-4 py-2 rounded-md
+               font-semibold transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Cancel
             </button>
@@ -117,4 +121,5 @@ export function VoteCard({ nominee, categoryId, voteCount }: VoteCardProps) {
       </div>
     </div>
   );
+
 } 

@@ -18,7 +18,6 @@ export function Auth() {
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   useEffect(() => {
-    // Handle error from URL hash
     const hash = window.location.hash;
     if (hash) {
       const params = new URLSearchParams(hash.substring(1));
@@ -27,12 +26,10 @@ export function Auth() {
 
       if (error === 'access_denied' && errorDescription?.includes('expired')) {
         setError('Your confirmation link has expired. Please request a new one.');
-        // Clear the hash from the URL
         window.history.replaceState(null, '', window.location.pathname);
       }
     }
 
-    // Handle success message from query params
     const message = searchParams.get('message');
     if (message) {
       setSuccessMessage(message);
@@ -76,7 +73,6 @@ export function Auth() {
 
         if (signUpError) throw signUpError;
 
-        // Create user profile
         const { data: { user } } = await supabase.auth.getUser();
         if (user) {
           const { error: profileError } = await supabase
@@ -103,7 +99,6 @@ export function Auth() {
             throw signInError;
           }
         } else {
-          // Successful sign in - redirect to home
           router.push('/');
         }
       }

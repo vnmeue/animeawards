@@ -28,7 +28,6 @@ export function Navigation() {
 
         const { data: { user } } = await supabase.auth.getUser();
         if (user) {
-          // Fetch user profile with proper error handling
           const { data: profile, error } = await supabase
             .from('user_profiles')
             .select('username')
@@ -37,7 +36,6 @@ export function Navigation() {
 
           if (error) {
             console.error('Error fetching profile:', error);
-            // If profile fetch fails, still set the user with basic info
             setUser({ 
               ...user, 
               username: user.user_metadata?.username || 'User' 

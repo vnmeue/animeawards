@@ -373,7 +373,7 @@ const VotingApp: React.FC = () => {
   return (
     <div className={`min-h-screen w-full text-gray-300`}> 
       
-      <div className="w-full px-4 py-2 pt-16 pb-20" >
+      <div className="w-full px-4 py-2 pt-16 pb-20 overflow-y-auto" >
         <div className="mb-4 text-center">
           <Image
             src="/logo.png"

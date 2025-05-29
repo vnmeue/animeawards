@@ -86,25 +86,27 @@ export function Navigation() {
   };
 
   return (
-    <nav className="fixed bottom-4 left-1/2 transform -translate-x-1/2 w-[calc(100%-2rem)] max-w-lg bg-[#2a2a2a] border border-[#3a3a3a] rounded-xl shadow-lg z-50 sm:static sm:top-0 sm:w-full sm:max-w-none sm:bg-[#242424] sm:border-b sm:border-[#333333] sm:rounded-none sm:shadow-none">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16 items-center">
-          <div className="flex items-center space-x-4">
-            <Link href="/" className="text-[#FFD700] font-bold hover:text-[#FFE44D]">
-              Subhasha ANIME AWARDS 2025
+    <nav className="fixed bottom-4 left-1/2 transform -translate-x-1/2 w-[calc(100%-2rem)] max-w-lg bg-[#2a2a2a] border border-[#3a3a3a] rounded-xl shadow-lg z-[100] sm:fixed sm:top-4 sm:left-1/2 sm:transform sm:-translate-x-1/2 sm:w-[calc(100%-2rem)] sm:max-w-7xl sm:bg-[#2a2a2a] sm:border sm:border-[#3a3a3a] sm:rounded-xl sm:shadow-lg sm:hidden">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+        <div className="flex justify-between h-10 sm:h-12 items-center">
+          <div className="flex items-center">
+            <Link href="/" className="text-[#FFD700] font-bold hover:text-[#FFE44D] text-sm sm:text-base">
+              Subhasha ANIME AWARDS
             </Link>
           </div>
 
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center gap-2 sm:gap-4">
             {loading ? (
-              <div className="text-gray-300">Loading...</div>
+              <div className="text-gray-300 text-xs sm:text-base">Loading...</div>
             ) : user ? (
               <>
-                <span className="text-gray-300 whitespace-nowrap">Welcome, {user.username}</span>
+                <span className="text-gray-300 whitespace-nowrap text-xs sm:text-base hidden sm:inline">
+                  Welcome, {user.username}
+                </span>
                 <button
                   onClick={handleSignOut}
                   disabled={signingOut}
-                  className={`bg-[#333333] hover:bg-[#444444] text-white px-4 py-2 rounded-md whitespace-nowrap ${
+                  className={`bg-[#333333] hover:bg-[#444444] text-white px-2.5 sm:px-4 py-1 rounded-md whitespace-nowrap text-xs sm:text-sm ${
                     signingOut ? 'opacity-50 cursor-not-allowed' : ''
                   }`}
                 >
@@ -114,7 +116,7 @@ export function Navigation() {
             ) : (
               <Link
                 href="/auth"
-                className="bg-[#FFD700] hover:bg-[#FFE44D] text-[#1a1a1a] px-4 py-2 rounded-md whitespace-nowrap"
+                className="bg-[#FFD700] hover:bg-[#FFE44D] text-[#1a1a1a] px-2.5 sm:px-4 py-1 rounded-md whitespace-nowrap text-xs sm:text-sm"
               >
                 Sign In
               </Link>

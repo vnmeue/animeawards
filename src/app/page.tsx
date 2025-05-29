@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { supabase } from '@/lib/supabase';
 import { IMAGE_URLS, COLORS } from '@/lib/constants';
+import Link from 'next/link';
 
 interface Nominee {
   id: number;
@@ -156,6 +157,7 @@ const VotingApp: React.FC = () => {
     totalNominees: 0,
     totalVotes: 0
   });
+  const [signInModalOpen, setSignInModalOpen] = useState(false);
 
   // Get user's votes and stats
   useEffect(() => {
@@ -278,7 +280,7 @@ const VotingApp: React.FC = () => {
     console.log(`Attempting to vote for Category: ${categoryId}, Nominee: ${nomineeId}`);
     if (!user) {
       console.log('User not signed in. Alerting user.');
-      alert('Please sign in to vote');
+      setSignInModalOpen(true);
       return;
     }
     
@@ -369,43 +371,45 @@ const VotingApp: React.FC = () => {
   console.log('Rendering with voteCounts state:', voteCounts);
 
   return (
-    <div className={`min-h-screen bg-[${COLORS.BACKGROUND}]`}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pb-24">
-        {/* Header Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
-          <div className={`bg-[${COLORS.CARD_BACKGROUND}] rounded-xl p-6 border border-[${COLORS.BORDER}]`}>
-            <h3 className={`text-lg font-semibold text-[${COLORS.ACCENT}] mb-2`}>Categories</h3>
-            <p className={`text-3xl font-bold text-[${COLORS.TEXT_PRIMARY}]`}>{stats.totalCategories}</p>
-          </div>
-          <div className={`bg-[${COLORS.CARD_BACKGROUND}] rounded-xl p-6 border border-[${COLORS.BORDER}]`}>
-            <h3 className={`text-lg font-semibold text-[${COLORS.ACCENT}] mb-2`}>Your Votes</h3>
-            <p className={`text-3xl font-bold text-[${COLORS.TEXT_PRIMARY}]`}>{stats.userVotes}</p>
-          </div>
-          <div className={`bg-[${COLORS.CARD_BACKGROUND}] rounded-xl p-6 border border-[${COLORS.BORDER}]`}>
-            <h3 className={`text-lg font-semibold text-[${COLORS.ACCENT}] mb-2`}>Total Nominees</h3>
-            <p className={`text-3xl font-bold text-[${COLORS.TEXT_PRIMARY}]`}>{stats.totalNominees}</p>
-          </div>
-          <div className={`bg-[${COLORS.CARD_BACKGROUND}] rounded-xl p-6 border border-[${COLORS.BORDER}]`}>
-            <h3 className={`text-lg font-semibold text-[${COLORS.ACCENT}] mb-2`}>Total Votes</h3>
-            <p className={`text-3xl font-bold text-[${COLORS.TEXT_PRIMARY}]`}>{stats.totalVotes.toLocaleString()}</p>
+    <div className={`min-h-screen w-full bg-gradient-to-br from-[#1a1a1a] to-[#333333] text-gray-300`}>
+      <div className="w-full h-full min-h-screen px-4 py-6 pt-20 pb-20">
+        {/* Header Stats - Make it scrollable on mobile */}
+        <div className="overflow-x-auto pb-4 -mx-4 px-4 sm:mx-0 sm:px-0">
+          <div className="grid grid-cols-2 gap-3 mb-8">
+            <div className={`bg-white/5 rounded-xl p-4 border border-white/10 backdrop-blur-sm`}>
+              <h3 className={`text-sm font-semibold text-[#FFD700] mb-1`}>Categories</h3>
+              <p className={`text-xl font-bold text-white`}>{stats.totalCategories}</p>
+            </div>
+            <div className={`bg-white/5 rounded-xl p-4 border border-white/10 backdrop-blur-sm`}>
+              <h3 className={`text-sm font-semibold text-[#FFD700] mb-1`}>Your Votes</h3>
+              <p className={`text-xl font-bold text-white`}>{stats.userVotes}</p>
+            </div>
+            <div className={`bg-white/5 rounded-xl p-4 border border-white/10 backdrop-blur-sm`}>
+              <h3 className={`text-sm font-semibold text-[#FFD700] mb-1`}>Total Nominees</h3>
+              <p className={`text-xl font-bold text-white`}>{stats.totalNominees}</p>
+            </div>
+            <div className={`bg-white/5 rounded-xl p-4 border border-white/10 backdrop-blur-sm`}>
+              <h3 className={`text-sm font-semibold text-[#FFD700] mb-1`}>Total Votes</h3>
+              <p className={`text-xl font-bold text-white`}>{stats.totalVotes.toLocaleString()}</p>
+            </div>
           </div>
         </div>
 
-        {/* Progress and Instructions */}
-        <div className="bg-[#242424] rounded-xl p-6 border border-[#333333] mb-12">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold text-[#FFD700]">Voting Progress</h2>
-            <span className="text-white">{totalVotes} / {CATEGORIES.length} categories</span>
+        {/* Progress and Instructions - More compact on mobile */}
+        <div className="bg-white/5 rounded-xl p-4 border border-white/10 backdrop-blur-sm mb-8">
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-lg font-bold text-[#FFD700]">Voting Progress</h2>
+            <span className="text-sm text-white">{totalVotes} / {CATEGORIES.length}</span>
           </div>
-          <div className="w-full bg-[#333333] rounded-full h-2 mb-6">
+          <div className="w-full bg-white/10 rounded-full h-2 mb-4">
             <div 
               className="bg-[#FFD700] h-2 rounded-full transition-all duration-1000"
               style={{ width: `${(totalVotes / CATEGORIES.length) * 100}%` }}
             />
           </div>
-          <div className="space-y-2 text-gray-300">
-            <h3 className="text-lg font-semibold text-[${COLORS.FFD700}] mb-2">How to Vote</h3>
-            <ul className="list-disc list-inside space-y-1">
+          <div className="space-y-1 text-gray-300">
+            <h3 className="text-base font-semibold text-[#FFD700] mb-1">How to Vote</h3>
+            <ul className="list-disc list-inside space-y-0.5 text-sm text-white/80">
               <li>Click on your favorite nominee in each category</li>
               <li>You can vote in multiple categories</li>
               <li>Change your vote anytime before voting closes</li>
@@ -414,22 +418,20 @@ const VotingApp: React.FC = () => {
           </div>
         </div>
 
-        {/* Toggle Results Button */}
-        <div className="flex justify-center mb-8">
+        {/* Toggle Results Button - More compact on mobile */}
+        <div className="flex justify-center mb-6">
           <button
             onClick={() => setShowResults(!showResults)}
-            className={`bg-[#FFD700] text-[#1a1a1a] px-6 py-3 rounded-full font-bold text-lg shadow-lg hover:bg-[#FFE44D] transition-colors duration-300`}
+            className={`bg-[#FFD700] text-[#1a1a1a] px-4 py-2 rounded-full font-bold text-base shadow-lg hover:bg-[#FFE44D] transition-colors duration-300`}
           >
             {showResults ? 'Hide Results' : 'Show Results'}
           </button>
         </div>
 
-        {/* Categories */}
-        <div className="space-y-12">
+        {/* Categories - Improved mobile layout */}
+        <div className="space-y-8">
           {CATEGORIES.map((category) => {
-            const categoryVoteCounts = voteCounts; // Explicitly use voteCounts state here
-
-            // Calculate totalCategoryVotes once per category
+            const categoryVoteCounts = voteCounts;
             const totalCategoryVotes = category.nominees.reduce(
               (acc, n) => acc + (categoryVoteCounts[`${category.id}-${n.id}`] || 0),
               0
@@ -440,28 +442,26 @@ const VotingApp: React.FC = () => {
                 key={category.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-[#242424] rounded-xl p-6 border border-[#333333]"
+                className="bg-white/5 rounded-xl p-4 border border-white/10 backdrop-blur-sm"
               >
-                <div className="flex items-center justify-between mb-6">
-                  <div className="flex items-center gap-3">
-                    <category.icon className="w-6 h-6 text-[#FFD700]" />
-                    <h2 className="text-2xl font-bold text-[#FFD700]">{category.name}</h2>
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-2">
+                    <category.icon className="w-5 h-5 text-[#FFD700]" />
+                    <h2 className="text-lg font-bold text-[#FFD700]">{category.name}</h2>
                   </div>
                   {category.isNew && (
-                    <span className="bg-[#FFD700] text-[#1a1a1a] px-3 py-1 rounded-full text-sm font-bold">
+                    <span className="bg-[#FFD700] text-[#1a1a1a] px-2 py-0.5 rounded-full text-xs font-bold">
                       NEW!
                     </span>
                   )}
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {/* Improved grid for mobile - Make cards more compact */}
+                <div className="grid grid-cols-2 gap-2">
                   {category.nominees.map((nominee) => {
                     const isSelected = votes[category.id] === nominee.id;
                     const voteCount = categoryVoteCounts[`${category.id}-${nominee.id}`] || 0;
-
                     const percentage = totalCategoryVotes > 0 ? ((voteCount / totalCategoryVotes) * 100).toFixed(1) : '0.0';
-
-                    console.log(`Category: ${category.name}, Nominee: ${nominee.title}, Vote Count: ${voteCount}, Total Category Votes: ${totalCategoryVotes}, Percentage: ${percentage}%`);
 
                     return (
                       <motion.div
@@ -473,8 +473,8 @@ const VotingApp: React.FC = () => {
                         }`}
                         onClick={() => handleVote(category.id, nominee.id)}
                       >
-                        <div className="relative overflow-hidden rounded-xl bg-[#1a1a1a] border border-[#333333]">
-                          <div className="aspect-[3/4] overflow-hidden">
+                        <div className="relative overflow-hidden rounded-lg bg-white/5 border border-white/10">
+                          <div className="aspect-[4/5] overflow-hidden">
                             <Image
                               src={nominee.image}
                               alt={nominee.title}
@@ -482,23 +482,23 @@ const VotingApp: React.FC = () => {
                               height={400}
                               className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
                             />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
                           </div>
 
-                          <div className="absolute bottom-0 left-0 right-0 p-4">
-                            <h4 className="text-white font-semibold text-sm mb-2 line-clamp-2">
+                          <div className="absolute bottom-0 left-0 right-0 p-2">
+                            <h4 className="text-white font-semibold text-xs mb-0.5 line-clamp-1 sm:line-clamp-2">
                               {nominee.title}
                             </h4>
 
                             {showResults && (
-                              <div className="space-y-2">
-                                <div className="flex justify-between text-xs text-gray-300">
+                              <div className="space-y-0.5">
+                                <div className="flex justify-between text-[10px] text-white/80">
                                   <span>{voteCount} votes</span>
                                   <span>{percentage}%</span>
                                 </div>
-                                <div className="w-full bg-[#333333] rounded-full h-1.5">
+                                <div className="w-full bg-white/10 rounded-full h-0.5">
                                   <div 
-                                    className="bg-[#FFD700] h-1.5 rounded-full transition-all duration-1000"
+                                    className="bg-[#FFD700] h-0.5 rounded-full transition-all duration-1000"
                                     style={{ width: `${(voteCount / totalCategoryVotes) * 100}%` }}
                                   />
                                 </div>
@@ -507,14 +507,14 @@ const VotingApp: React.FC = () => {
                           </div>
 
                           {isSelected && (
-                            <div className="absolute top-2 right-2 bg-[#FFD700] rounded-full p-1">
-                              <Heart className="w-4 h-4 text-[#1a1a1a] fill-current" />
+                            <div className="absolute top-1 right-1 bg-[#FFD700] rounded-full p-0.5">
+                              <Heart className="w-2.5 h-2.5 text-[#1a1a1a] fill-current" />
                             </div>
                           )}
 
                           {!showResults && (
                             <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                              <Vote className="w-8 h-8 text-[#FFD700]" />
+                              <Vote className="w-4 h-4 text-[#FFD700]" />
                             </div>
                           )}
                         </div>
@@ -527,6 +527,32 @@ const VotingApp: React.FC = () => {
           })}
         </div>
       </div>
+
+      {/* Sign In Modal */}
+      {signInModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-[101]">
+          <div className="bg-[#1a1a1a] text-white p-6 sm:p-8 rounded-lg shadow-xl border border-[#3a3a3a] max-w-sm w-full text-center relative">
+            <button 
+              onClick={() => setSignInModalOpen(false)}
+              className="absolute top-3 right-3 text-gray-500 hover:text-gray-300"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+            <h2 className="text-xl sm:text-2xl font-bold mb-4 text-[#FFD700]">Sign In Required</h2>
+            <p className="text-sm sm:text-base text-gray-300 mb-6">You need to be signed in to cast your vote.</p>
+            <Link href="/auth">
+              <button
+                onClick={() => setSignInModalOpen(false)}
+                className="bg-[#FFD700] text-[#1a1a1a] px-4 sm:px-6 py-2 sm:py-3 rounded-full font-bold text-base sm:text-lg shadow-lg hover:bg-[#FFE44D] transition-colors duration-300 w-full"
+              >
+                Go to Sign In Page
+              </button>
+            </Link>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

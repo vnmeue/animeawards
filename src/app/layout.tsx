@@ -6,7 +6,7 @@ import { Navigation } from "@/components/Navigation";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Subhasha ANIME AWARDS 2025",
+  title: "Subhasha ANIME AWARDS",
   description: "Vote for your favorite anime in the Subhasha ANIME AWARDS 2025",
 };
 
@@ -23,9 +23,6 @@ export default function RootLayout({
         {children}
         </main>
         <footer className="bg-[#242424] mt-auto">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-            <p className="text-center text-gray-400">© 2025 Subhasha ANIME AWARDS. All rights reserved.</p>
-          </div>
         </footer>
       </body>
     </html>
